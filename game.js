@@ -107,15 +107,16 @@ class Game {
     // Nouvelle méthode pour gérer le lancer de dé quand le joueur est dans la boîte de pénalité
     handlePenaltyBoxRoll(roll) {
         if (roll % 2 !== 0) {
-        this.isGettingOutOfPenaltyBox = true;
-        this.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
-        this.movePlayer(roll);
-        this.log(`The category is ${this.currentCategory()}`);
-        this.askQuestion();
-        } else {
-        this.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
-        this.isGettingOutOfPenaltyBox = false;
-        }
+            this.isGettingOutOfPenaltyBox = true;
+            this.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
+            this.movePlayer(roll);
+            this.log(`The category is ${this.currentCategory()}`);
+            this.askQuestion();
+          } else {
+            this.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
+            this.isGettingOutOfPenaltyBox = false;
+            this.nextPlayer();  // Ajouter le changement de joueur
+          }
     }
 
     // Nouvelle méthode pour déplacer le joueur
@@ -128,10 +129,29 @@ class Game {
     // Méthode pour gérer une réponse correcte
     wasCorrectlyAnswered() {
         if (this.inPenaltyBox[this.currentPlayer]) {
-          return this.handleCorrectAnswerInPenaltyBox();
-        } else {
-          return this.handleCorrectAnswer();
-        }
+            if (this.isGettingOutOfPenaltyBox) {
+              this.log('Answer was correct!!!!');
+              this.purses[this.currentPlayer] += 1;
+              this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        
+              const winner = this.didPlayerWin();
+              this.nextPlayer();
+        
+              return !winner;
+            } else {
+              this.nextPlayer();
+              return true;
+            }
+          } else {
+            this.log('Answer was correct!!!!');
+            this.purses[this.currentPlayer] += 1;
+            this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        
+            const winner = this.didPlayerWin();
+            this.nextPlayer();
+        
+            return !winner;
+          }
     }
 
     // Méthode pour gérer une réponse correcte quand le joueur est dans la boîte de pénalité
@@ -160,7 +180,7 @@ class Game {
         const winner = this.didPlayerWin();
         this.nextPlayer();
 
-        return winner;
+        return !winner;
     }
 
     // Méthode pour gérer une réponse incorrecte
@@ -183,7 +203,7 @@ class Game {
   
     // Méthode pour vérifier si le joueur a gagné
     didPlayerWin() {
-      return this.purses[this.currentPlayer] < 6;
+        return this.purses[this.currentPlayer] >= 6;
     }
 
     // Méthode de journalisation pour remplacer this.log
@@ -192,22 +212,22 @@ class Game {
     }
   }
   
-  // Simulation du jeu
-  const game = new Game();
-  game.addPlayer('Chet');
-  game.addPlayer('Pat');
-  game.addPlayer('Sue');
-  
-  let notAWinner;
-  do {
-    game.roll(Math.floor(Math.random() * 6) + 1);
-  
+    // Simulation du jeu
+    const game = new Game();
+    game.addPlayer('Chet');
+    game.addPlayer('Pat');
+    game.addPlayer('Sue');
+
+    let notAWinner;
+    do {
+    game.rollDice(Math.floor(Math.random() * 6) + 1);
+
     if (Math.floor(Math.random() * 10) === 7) {
-      notAWinner = game.wrongAnswer();
+        notAWinner = game.wrongAnswer();
     } else {
-      notAWinner = game.wasCorrectlyAnswered();
+        notAWinner = game.wasCorrectlyAnswered();
     }
-  } while (notAWinner);
-  
-  module.exports = Game;
+    } while (notAWinner);
+
+    module.exports = Game;
   
