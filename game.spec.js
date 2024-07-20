@@ -83,4 +83,25 @@ describe("Game Class", function() {
     expect(winner).toBe(false);
     expect(game.purses[0]).toBe(6);
   });
+
+  it("should ask the correct question based on the current category", function() {
+    game.rollDice(0);
+    expect(game.currentCategory()).toBe('Pop');
+    game.rollDice(1);
+    expect(game.currentCategory()).toBe('Science');
+    game.rollDice(2);
+    expect(game.currentCategory()).toBe('Sports');
+    game.rollDice(3);
+    expect(game.currentCategory()).toBe('Rock');
+  });
+
+  it("should not allow a game to be played with less than 2 players", function() {
+    const singlePlayerGame = new Game();
+    singlePlayerGame.addPlayer('OnlyPlayer');
+    expect(singlePlayerGame.isPlayable()).toBe(false);
+  });
+
+  it("should allow a game to be played with 2 or more players", function() {
+    expect(game.isPlayable()).toBe(true);
+  });
 });
