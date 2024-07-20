@@ -81,30 +81,38 @@ class Game {
     }
   
     // Méthode pour gérer le lancer de dé
-    roll(roll) {
-      console.log(`${this.players[this.currentPlayer]} is the current player`);
-      console.log(`They have rolled a ${roll}`);
-  
-      if (this.inPenaltyBox[this.currentPlayer]) {
+    rollDice(roll) {
+        console.log(`${this.players[this.currentPlayer]} is the current player`);
+        console.log(`They have rolled a ${roll}`);
+
+        if (this.inPenaltyBox[this.currentPlayer]) {
+            this.handlePenaltyBoxRoll(roll);
+          } else {
+            this.movePlayer(roll);
+            console.log(`The category is ${this.currentCategory()}`);
+            this.askQuestion();
+          }
+    }
+
+    // Nouvelle méthode pour gérer le lancer de dé quand le joueur est dans la boîte de pénalité
+    handlePenaltyBoxRoll(roll) {
         if (roll % 2 !== 0) {
-          this.isGettingOutOfPenaltyBox = true;
-          console.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
-          this.places[this.currentPlayer] += roll;
-          this.places[this.currentPlayer] %= 12;
-          console.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
-          console.log(`The category is ${this.currentCategory()}`);
-          this.askQuestion();
+        this.isGettingOutOfPenaltyBox = true;
+        console.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
+        this.movePlayer(roll);
+        console.log(`The category is ${this.currentCategory()}`);
+        this.askQuestion();
         } else {
-          console.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
-          this.isGettingOutOfPenaltyBox = false;
+        console.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
+        this.isGettingOutOfPenaltyBox = false;
         }
-      } else {
+    }
+
+    // Nouvelle méthode pour déplacer le joueur
+    movePlayer(roll) {
         this.places[this.currentPlayer] += roll;
         this.places[this.currentPlayer] %= 12;
         console.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
-        console.log(`The category is ${this.currentCategory()}`);
-        this.askQuestion();
-      }
     }
   
     // Méthode pour gérer une réponse correcte
