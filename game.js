@@ -1,4 +1,5 @@
-// game.js
+const winston = require('winston');
+
 class Game {
     constructor() {
       // Initialisation des propriétés de l'instance
@@ -17,6 +18,15 @@ class Game {
       this.currentPlayer = 0;
       this.isGettingOutOfPenaltyBox = false;
   
+      this.logger = winston.createLogger({
+        level: 'info',
+        format: winston.format.simple(),
+        transports: [
+          new winston.transports.Console(),
+          new winston.transports.File({ filename: 'game.log' })
+        ]
+      });
+
       this.initializeQuestions();
     }
   
@@ -41,8 +51,8 @@ class Game {
       this.places[this.players.length - 1] = 0;
       this.purses[this.players.length - 1] = 0;
       this.inPenaltyBox[this.players.length - 1] = false;
-      console.log(`${playerName} was added`);
-      console.log(`They are player number ${this.players.length}`);
+      this.log(`${playerName} was added`);
+      this.log(`They are player number ${this.players.length}`);
       return true;
     }
   
@@ -66,119 +76,158 @@ class Game {
     askQuestion() {
       switch (this.currentCategory()) {
         case 'Pop':
-          console.log(this.popQuestions.shift());
+          this.log(this.popQuestions.shift());
           break;
         case 'Science':
-          console.log(this.scienceQuestions.shift());
+          this.log(this.scienceQuestions.shift());
           break;
         case 'Sports':
-          console.log(this.sportsQuestions.shift());
+          this.log(this.sportsQuestions.shift());
           break;
         case 'Rock':
-          console.log(this.rockQuestions.shift());
+          this.log(this.rockQuestions.shift());
           break;
       }
     }
   
     // Méthode pour gérer le lancer de dé
-    roll(roll) {
-      console.log(`${this.players[this.currentPlayer]} is the current player`);
-      console.log(`They have rolled a ${roll}`);
-  
-      if (this.inPenaltyBox[this.currentPlayer]) {
+    rollDice(roll) {
+        this.log(`${this.players[this.currentPlayer]} is the current player`);
+        this.log(`They have rolled a ${roll}`);
+
+        if (this.inPenaltyBox[this.currentPlayer]) {
+            this.handlePenaltyBoxRoll(roll);
+          } else {
+            this.movePlayer(roll);
+            this.log(`The category is ${this.currentCategory()}`);
+            this.askQuestion();
+          }
+    }
+
+    // Nouvelle méthode pour gérer le lancer de dé quand le joueur est dans la boîte de pénalité
+    handlePenaltyBoxRoll(roll) {
         if (roll % 2 !== 0) {
-          this.isGettingOutOfPenaltyBox = true;
-          console.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
-          this.places[this.currentPlayer] += roll;
-          this.places[this.currentPlayer] %= 12;
-          console.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
-          console.log(`The category is ${this.currentCategory()}`);
-          this.askQuestion();
-        } else {
-          console.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
-          this.isGettingOutOfPenaltyBox = false;
-        }
-      } else {
+            this.isGettingOutOfPenaltyBox = true;
+            this.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
+            this.movePlayer(roll);
+            this.log(`The category is ${this.currentCategory()}`);
+            this.askQuestion();
+          } else {
+            this.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
+            this.isGettingOutOfPenaltyBox = false;
+            this.nextPlayer();  // Ajouter le changement de joueur
+          }
+    }
+
+    // Nouvelle méthode pour déplacer le joueur
+    movePlayer(roll) {
         this.places[this.currentPlayer] += roll;
         this.places[this.currentPlayer] %= 12;
-        console.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
-        console.log(`The category is ${this.currentCategory()}`);
-        this.askQuestion();
-      }
+        this.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
     }
   
     // Méthode pour gérer une réponse correcte
     wasCorrectlyAnswered() {
-      if (this.inPenaltyBox[this.currentPlayer]) {
-        if (this.isGettingOutOfPenaltyBox) {
-          console.log('Answer was correct!!!!');
-          this.purses[this.currentPlayer] += 1;
-          console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
-  
-          const winner = this.didPlayerWin();
-          this.currentPlayer += 1;
-          if (this.currentPlayer === this.players.length) {
-            this.currentPlayer = 0;
+        if (this.inPenaltyBox[this.currentPlayer]) {
+            if (this.isGettingOutOfPenaltyBox) {
+              this.log('Answer was correct!!!!');
+              this.purses[this.currentPlayer] += 1;
+              this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        
+              const winner = this.didPlayerWin();
+              this.nextPlayer();
+        
+              return !winner;
+            } else {
+              this.nextPlayer();
+              return true;
+            }
+          } else {
+            this.log('Answer was correct!!!!');
+            this.purses[this.currentPlayer] += 1;
+            this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        
+            const winner = this.didPlayerWin();
+            this.nextPlayer();
+        
+            return !winner;
           }
-  
-          return winner;
-        } else {
-          this.currentPlayer += 1;
-          if (this.currentPlayer === this.players.length) {
-            this.currentPlayer = 0;
-          }
-          return true;
-        }
-      } else {
-        console.log('Answer was correct!!!!');
-        this.purses[this.currentPlayer] += 1;
-        console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
-  
-        const winner = this.didPlayerWin();
-        this.currentPlayer += 1;
-        if (this.currentPlayer === this.players.length) {
-          this.currentPlayer = 0;
-        }
-  
-        return winner;
-      }
     }
-  
+
+    // Méthode pour gérer une réponse correcte quand le joueur est dans la boîte de pénalité
+    handleCorrectAnswerInPenaltyBox() {
+        if (this.isGettingOutOfPenaltyBox) {
+        this.log('Answer was correct!!!!');
+        this.purses[this.currentPlayer] += 1;
+        this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+
+        const winner = this.didPlayerWin();
+        this.nextPlayer();
+
+        return winner;
+        } else {
+        this.nextPlayer();
+        return true;
+        }
+    }
+
+    // Méthode pour gérer une réponse correcte
+    handleCorrectAnswer() {
+        this.log('Answer was correct!!!!');
+        this.purses[this.currentPlayer] += 1;
+        this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+
+        const winner = this.didPlayerWin();
+        this.nextPlayer();
+
+        return !winner;
+    }
+
     // Méthode pour gérer une réponse incorrecte
     wrongAnswer() {
-      console.log('Question was incorrectly answered');
-      console.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
-      this.inPenaltyBox[this.currentPlayer] = true;
+        this.log('Question was incorrectly answered');
+        this.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
+        this.inPenaltyBox[this.currentPlayer] = true;
+
+        this.nextPlayer();
+        return true;
+    }
   
-      this.currentPlayer += 1;
-      if (this.currentPlayer === this.players.length) {
+    // Méthode pour passer au joueur suivant
+    nextPlayer() {
+        this.currentPlayer += 1;
+        if (this.currentPlayer === this.players.length) {
         this.currentPlayer = 0;
-      }
-      return true;
+        }
     }
   
     // Méthode pour vérifier si le joueur a gagné
     didPlayerWin() {
-      return this.purses[this.currentPlayer] < 6;
+        return this.purses[this.currentPlayer] >= 6;
+    }
+
+    // Méthode de journalisation pour remplacer this.log
+    log(message) {
+        this.logger.info(message);
     }
   }
   
-  // Simulation du jeu
-  const game = new Game();
-  game.addPlayer('Chet');
-  game.addPlayer('Pat');
-  game.addPlayer('Sue');
-  
-  let notAWinner;
-  do {
-    game.roll(Math.floor(Math.random() * 6) + 1);
-  
+    // Simulation du jeu
+    const game = new Game();
+    game.addPlayer('Chet');
+    game.addPlayer('Pat');
+    game.addPlayer('Sue');
+
+    let notAWinner;
+    do {
+    game.rollDice(Math.floor(Math.random() * 6) + 1);
+
     if (Math.floor(Math.random() * 10) === 7) {
-      notAWinner = game.wrongAnswer();
+        notAWinner = game.wrongAnswer();
     } else {
-      notAWinner = game.wasCorrectlyAnswered();
+        notAWinner = game.wasCorrectlyAnswered();
     }
-  } while (notAWinner);
-  
-  module.exports = Game;
+    } while (notAWinner);
+
+    module.exports = Game;
   

@@ -1,0 +1,19 @@
+{
+  "name": "anacode",
+  "version": "1.0.0",
+  "description": "Install the jasmine-node plugin from https://github.com/mhevery/jasmine-node",
+  "main": "game.js",
+  "scripts": {
+    "start": "node game.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^3.13.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
