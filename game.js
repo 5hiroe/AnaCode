@@ -1,4 +1,5 @@
-// game.js
+const winston = require('winston');
+
 class Game {
     constructor() {
       // Initialisation des propriétés de l'instance
@@ -17,6 +18,15 @@ class Game {
       this.currentPlayer = 0;
       this.isGettingOutOfPenaltyBox = false;
   
+      this.logger = winston.createLogger({
+        level: 'info',
+        format: winston.format.simple(),
+        transports: [
+          new winston.transports.Console(),
+          new winston.transports.File({ filename: 'game.log' })
+        ]
+      });
+
       this.initializeQuestions();
     }
   
@@ -41,8 +51,8 @@ class Game {
       this.places[this.players.length - 1] = 0;
       this.purses[this.players.length - 1] = 0;
       this.inPenaltyBox[this.players.length - 1] = false;
-      console.log(`${playerName} was added`);
-      console.log(`They are player number ${this.players.length}`);
+      this.log(`${playerName} was added`);
+      this.log(`They are player number ${this.players.length}`);
       return true;
     }
   
@@ -66,30 +76,30 @@ class Game {
     askQuestion() {
       switch (this.currentCategory()) {
         case 'Pop':
-          console.log(this.popQuestions.shift());
+          this.log(this.popQuestions.shift());
           break;
         case 'Science':
-          console.log(this.scienceQuestions.shift());
+          this.log(this.scienceQuestions.shift());
           break;
         case 'Sports':
-          console.log(this.sportsQuestions.shift());
+          this.log(this.sportsQuestions.shift());
           break;
         case 'Rock':
-          console.log(this.rockQuestions.shift());
+          this.log(this.rockQuestions.shift());
           break;
       }
     }
   
     // Méthode pour gérer le lancer de dé
     rollDice(roll) {
-        console.log(`${this.players[this.currentPlayer]} is the current player`);
-        console.log(`They have rolled a ${roll}`);
+        this.log(`${this.players[this.currentPlayer]} is the current player`);
+        this.log(`They have rolled a ${roll}`);
 
         if (this.inPenaltyBox[this.currentPlayer]) {
             this.handlePenaltyBoxRoll(roll);
           } else {
             this.movePlayer(roll);
-            console.log(`The category is ${this.currentCategory()}`);
+            this.log(`The category is ${this.currentCategory()}`);
             this.askQuestion();
           }
     }
@@ -98,12 +108,12 @@ class Game {
     handlePenaltyBoxRoll(roll) {
         if (roll % 2 !== 0) {
         this.isGettingOutOfPenaltyBox = true;
-        console.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
+        this.log(`${this.players[this.currentPlayer]} is getting out of the penalty box`);
         this.movePlayer(roll);
-        console.log(`The category is ${this.currentCategory()}`);
+        this.log(`The category is ${this.currentCategory()}`);
         this.askQuestion();
         } else {
-        console.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
+        this.log(`${this.players[this.currentPlayer]} is not getting out of the penalty box`);
         this.isGettingOutOfPenaltyBox = false;
         }
     }
@@ -112,7 +122,7 @@ class Game {
     movePlayer(roll) {
         this.places[this.currentPlayer] += roll;
         this.places[this.currentPlayer] %= 12;
-        console.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
+        this.log(`${this.players[this.currentPlayer]}'s new location is ${this.places[this.currentPlayer]}`);
     }
   
     // Méthode pour gérer une réponse correcte
@@ -127,9 +137,9 @@ class Game {
     // Méthode pour gérer une réponse correcte quand le joueur est dans la boîte de pénalité
     handleCorrectAnswerInPenaltyBox() {
         if (this.isGettingOutOfPenaltyBox) {
-        console.log('Answer was correct!!!!');
+        this.log('Answer was correct!!!!');
         this.purses[this.currentPlayer] += 1;
-        console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
 
         const winner = this.didPlayerWin();
         this.nextPlayer();
@@ -143,9 +153,9 @@ class Game {
 
     // Méthode pour gérer une réponse correcte
     handleCorrectAnswer() {
-        console.log('Answer was correct!!!!');
+        this.log('Answer was correct!!!!');
         this.purses[this.currentPlayer] += 1;
-        console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+        this.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
 
         const winner = this.didPlayerWin();
         this.nextPlayer();
@@ -155,8 +165,8 @@ class Game {
 
     // Méthode pour gérer une réponse incorrecte
     wrongAnswer() {
-        console.log('Question was incorrectly answered');
-        console.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
+        this.log('Question was incorrectly answered');
+        this.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
         this.inPenaltyBox[this.currentPlayer] = true;
 
         this.nextPlayer();
@@ -174,6 +184,11 @@ class Game {
     // Méthode pour vérifier si le joueur a gagné
     didPlayerWin() {
       return this.purses[this.currentPlayer] < 6;
+    }
+
+    // Méthode de journalisation pour remplacer this.log
+    log(message) {
+        this.logger.info(message);
     }
   }
   
