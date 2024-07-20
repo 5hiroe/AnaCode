@@ -7,6 +7,7 @@ class Game {
       this.places = new Array(6).fill(0);
       this.purses = new Array(6).fill(0);
       this.inPenaltyBox = new Array(6).fill(false);
+      this.jokers = new Array(6).fill(true);
   
       // Initialisation des questions pour chaque catégorie
       this.popQuestions = [];
@@ -51,6 +52,7 @@ class Game {
       this.places[this.players.length - 1] = 0;
       this.purses[this.players.length - 1] = 0;
       this.inPenaltyBox[this.players.length - 1] = false;
+      this.jokers[this.players.length - 1] = true;
       this.log(`${playerName} was added`);
       this.log(`They are player number ${this.players.length}`);
       return true;
@@ -192,6 +194,18 @@ class Game {
         this.nextPlayer();
         return true;
     }
+
+    useJoker() {
+        if (this.jokers[this.currentPlayer]) {
+          this.log(`${this.players[this.currentPlayer]} used a joker!`);
+          this.jokers[this.currentPlayer] = false;
+          this.nextPlayer();
+          return true;
+        } else {
+          this.log(`${this.players[this.currentPlayer]} has no jokers left!`);
+          return false;
+        }
+      }
   
     // Méthode pour passer au joueur suivant
     nextPlayer() {
