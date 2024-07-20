@@ -1,0 +1,422 @@
+[
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Sue",
+    "places": [
+      2,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Chet",
+    "places": [
+      2,
+      5,
+      5,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      1,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      4,
+      5,
+      5,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      2,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Chet",
+    "places": [
+      4,
+      5,
+      5,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      2,
+      0,
+      2,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      6,
+      5,
+      5,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      3,
+      0,
+      2,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": false
+  },
+  {
+    "currentPlayer": "Sue",
+    "places": [
+      6,
+      8,
+      5,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      3,
+      1,
+      2,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Chet",
+    "places": [
+      6,
+      8,
+      9,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      3,
+      1,
+      3,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      10,
+      8,
+      9,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      4,
+      1,
+      3,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Sue",
+    "places": [
+      10,
+      11,
+      9,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      4,
+      2,
+      3,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Chet",
+    "places": [
+      10,
+      11,
+      10,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      4,
+      2,
+      4,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      11,
+      11,
+      10,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      5,
+      2,
+      4,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Sue",
+    "places": [
+      11,
+      0,
+      10,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      5,
+      2,
+      4,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Chet",
+    "places": [
+      11,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      5,
+      2,
+      5,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  },
+  {
+    "currentPlayer": "Pat",
+    "places": [
+      4,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    "purses": [
+      6,
+      2,
+      5,
+      0,
+      0,
+      0
+    ],
+    "inPenaltyBox": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isGettingOutOfPenaltyBox": true
+  }
+]
