@@ -117,52 +117,58 @@ class Game {
   
     // Méthode pour gérer une réponse correcte
     wasCorrectlyAnswered() {
-      if (this.inPenaltyBox[this.currentPlayer]) {
-        if (this.isGettingOutOfPenaltyBox) {
-          console.log('Answer was correct!!!!');
-          this.purses[this.currentPlayer] += 1;
-          console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
-  
-          const winner = this.didPlayerWin();
-          this.currentPlayer += 1;
-          if (this.currentPlayer === this.players.length) {
-            this.currentPlayer = 0;
-          }
-  
-          return winner;
+        if (this.inPenaltyBox[this.currentPlayer]) {
+          return this.handleCorrectAnswerInPenaltyBox();
         } else {
-          this.currentPlayer += 1;
-          if (this.currentPlayer === this.players.length) {
-            this.currentPlayer = 0;
-          }
-          return true;
+          return this.handleCorrectAnswer();
         }
-      } else {
+    }
+
+    // Méthode pour gérer une réponse correcte quand le joueur est dans la boîte de pénalité
+    handleCorrectAnswerInPenaltyBox() {
+        if (this.isGettingOutOfPenaltyBox) {
         console.log('Answer was correct!!!!');
         this.purses[this.currentPlayer] += 1;
         console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
-  
+
         const winner = this.didPlayerWin();
-        this.currentPlayer += 1;
-        if (this.currentPlayer === this.players.length) {
-          this.currentPlayer = 0;
-        }
-  
+        this.nextPlayer();
+
         return winner;
-      }
+        } else {
+        this.nextPlayer();
+        return true;
+        }
     }
-  
+
+    // Méthode pour gérer une réponse correcte
+    handleCorrectAnswer() {
+        console.log('Answer was correct!!!!');
+        this.purses[this.currentPlayer] += 1;
+        console.log(`${this.players[this.currentPlayer]} now has ${this.purses[this.currentPlayer]} Gold Coins.`);
+
+        const winner = this.didPlayerWin();
+        this.nextPlayer();
+
+        return winner;
+    }
+
     // Méthode pour gérer une réponse incorrecte
     wrongAnswer() {
-      console.log('Question was incorrectly answered');
-      console.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
-      this.inPenaltyBox[this.currentPlayer] = true;
+        console.log('Question was incorrectly answered');
+        console.log(`${this.players[this.currentPlayer]} was sent to the penalty box`);
+        this.inPenaltyBox[this.currentPlayer] = true;
+
+        this.nextPlayer();
+        return true;
+    }
   
-      this.currentPlayer += 1;
-      if (this.currentPlayer === this.players.length) {
+    // Méthode pour passer au joueur suivant
+    nextPlayer() {
+        this.currentPlayer += 1;
+        if (this.currentPlayer === this.players.length) {
         this.currentPlayer = 0;
-      }
-      return true;
+        }
     }
   
     // Méthode pour vérifier si le joueur a gagné
